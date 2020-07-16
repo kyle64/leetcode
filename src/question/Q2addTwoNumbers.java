@@ -3,7 +3,7 @@ package question;
 /**
  * Created by ziheng on 2018/3/1.
  */
-public class Q2 {
+public class Q2addTwoNumbers {
     public class ListNode {
         int val;
         ListNode next;
@@ -16,7 +16,7 @@ public class Q2 {
     /**
      * @param l1
      * @param l2
-     * @return question.Q2.ListNode
+     * @return question.Q2addTwoNumbers.ListNode
      * @Description: 给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序 的方式存储的，并且它们的每个节点只能存储 一位 数字。
      * <p>
      * 如果，我们将这两个数相加起来，则会返回一个新的链表来表示它们的和。
