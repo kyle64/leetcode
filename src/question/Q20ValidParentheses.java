@@ -5,7 +5,7 @@ import java.util.Stack;
 /**
  * Created by ziheng on 2020/7/11.
  */
-public class Q20 {
+public class Q20ValidParentheses {
     /**
      * @Description: 20. 有效的括号
      *
