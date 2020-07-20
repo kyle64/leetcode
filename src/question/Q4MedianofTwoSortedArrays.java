@@ -39,6 +39,7 @@ public class Q4MedianofTwoSortedArrays {
      */
     public static double findMedianSortedArrays(int[] nums1, int[] nums2) {
         // 二分法，因为要找中位数，即第k小的数，每次去掉两个数组中较小的前(k - i) / 2个数
+        // 时间复杂度O(log(m + n))
 
         // k是第k小的数
         int k = (nums1.length + nums2.length + 1) / 2;
@@ -121,6 +122,7 @@ public class Q4MedianofTwoSortedArrays {
 
     // 官方，划分数组，根据中位数定义，i,j分别切分nums1和nums2
     // 符合中位数定义的划分条件：Max(nums1[i - 1], nums2[j - 1]) <= Min(nums1[i], nums2[j])
+    // 时间复杂度O(log(min(m,n)))
     public double findMedianSortedArraysOfficial(int[] nums1, int[] nums2) {
         if (nums1.length > nums2.length) {
             return findMedianSortedArraysOfficial(nums2, nums1);
