@@ -3,7 +3,7 @@ package question;
 /**
  * Created by ziheng on 2020/7/10.
  */
-public class Q21 {
+public class Q21MergeTwoLists {
     public class ListNode {
         int val;
         ListNode next;
@@ -24,7 +24,7 @@ public class Q21 {
     /**
      * @param l1
      * @param l2
-     * @return question.Q21.ListNode
+     * @return question.Q21MergeTwoLists.ListNode
      * @Description: 21. 合并两个有序链表
      * <p>
      * 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
