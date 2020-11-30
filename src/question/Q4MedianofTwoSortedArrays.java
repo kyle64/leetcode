@@ -138,6 +138,9 @@ public class Q4MedianofTwoSortedArrays {
         while (left <= right) {
             // 前一部分包含 nums1[0 .. i-1] 和 nums2[0 .. j-1]
             // 后一部分包含 nums1[i .. m-1] 和 nums2[j .. n-1]
+            // 找一个分界，左右两边的数字个数一样
+            // i + j = m - i + n - j or i + j = m - i + n - j + 1
+            // i + j = (m + n + 1) / 2
             int i = (left + right) / 2;
             int j = (m + n + 1) / 2 - i;
 
@@ -147,6 +150,14 @@ public class Q4MedianofTwoSortedArrays {
             int nums_jm1 = (j == 0 ? Integer.MIN_VALUE : nums2[j - 1]);
             int nums_j = (j == n ? Integer.MAX_VALUE : nums2[j]);
 
+            // B[j−1] <= A[i] 以及 A[i−1] <= B[j]，即前一部分的最大值小于等于后一部分的最小值
+            // 当 i 从 0∼m 递增时，A[i−1] 递增，B[j] 递减，所以一定存在一个最大的i满足A[i−1] <= B[j]；
+            //
+            // 如果 i 是最大的，那么说明i+1不满足。将i+1带入可以得到A[i] > B[j−1]，也就是B[j−1]<A[i]，
+            // 就和我们进行等价变换前i的性质一致了（甚至还要更强）。
+
+            // 因此我们可以对 i 在[0,m]的区间上进行二分搜索，找到最大的满足A[i−1]<=B[j]的i值，就得到了划分的方法。
+            // 此时，划分前一部分元素中的最大值，以及划分后一部分元素中的最小值，才可能作为就是这两个数组的中位数。
             if (nums_im1 <= nums_j) {
                 ansi = i;
                 median1 = Math.max(nums_im1, nums_jm1);
