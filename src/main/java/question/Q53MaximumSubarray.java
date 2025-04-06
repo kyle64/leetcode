@@ -126,4 +126,77 @@ public class Q53MaximumSubarray {
         int mSum = Math.max(Math.max(l.mSum, r.mSum), l.rSum + r.lSum);
         return new Status(lSum, rSum, mSum, iSum);
     }
+
+    public int maxSubArrayDPOpt(int[] nums) {
+        // 动态规划，dp[i] 表示下标i结尾的最大连续子数组和
+        // dp[i] = dp[i - 1] < 0 ? nums[i] : dp[i - 1] + nums[i]
+        // dp[i]只和dp[i - 1]有关，空间优化
+
+        int dp = nums[0];
+        int res = dp;
+
+        for (int i = 1; i < nums.length; i++) {
+            dp = Math.max(dp, 0) + nums[i];
+            res = Math.max(res, dp);
+        }
+        return res;
+    }
+
+    public int maxSubArrayDPArray(int[] nums) {
+        // 动态规划，dp[i] 表示下标i结尾的最大连续子数组和
+        // dp[i] = dp[i - 1] < 0 ? nums[i] : dp[i - 1] + nums[i]
+
+        int res = nums[0];
+        int[] dp = new int[nums.length];
+        dp[0] = nums[0];
+
+        for (int i = 1; i < nums.length; i++) {
+            dp[i] = dp[i - 1] < 0 ? nums[i] : dp[i - 1] + nums[i];
+            res = Math.max(res, dp[i]);
+        }
+        return res;
+    }
+
+    public int maxSubArrayPreSumOpt(int[] nums) {
+        // 对于下标i的位置上，最大的总和为前缀和减去之前的前缀和的最小值
+        // maxSum(i) = preSum(i) - min(preSum(0, i - 1))
+        // 前缀和方式优化
+
+        // init
+        int res = Integer.MIN_VALUE;
+        int minPreSum = 0; // 初始化为0，以保证可以只选nums[i]
+        int preSum = 0;
+        for (int num : nums) {
+            preSum += num;
+            res = Math.max(res, preSum - minPreSum);
+            minPreSum = Math.min(minPreSum, preSum);
+        }
+        return res;
+    }
+
+    public int maxSubArrayPreSum(int[] nums) {
+        // 对于下标i的位置上，最大的总和为前缀和减去之前的前缀和的最小值 or 0
+        // maxSum(i) = preSum(i) - min(preSum(0, i - 1))
+
+        // init prefix sum array, 初始化前缀和数组
+        int[] preSums = new int[nums.length];
+        preSums[0] = nums[0];
+        for (int i = 1; i < nums.length; i++) {
+            preSums[i] = preSums[i - 1] + nums[i];
+        }
+
+        int res, curMinPreSum;
+        res = curMinPreSum = preSums[0];
+        for (int i = 1; i < nums.length; i++) {
+            res = Math.max(res, preSums[i] - Math.min(0, curMinPreSum));
+            curMinPreSum = Math.min(curMinPreSum, preSums[i]);
+        }
+
+        return res;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = new int[] {-2,1,-3,4,-1,2,1,-5,4};
+        System.out.println(new Q53MaximumSubarray().maxSubArray(nums));
+    }
 }

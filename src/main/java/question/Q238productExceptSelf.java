@@ -78,6 +78,30 @@ public class Q238productExceptSelf {
         return answer;
     }
 
+    public int[] productExceptSelf1(int[] nums) {
+        // 不可以用除法，也有0的限制，因此记录每个位置左侧和右侧的乘积
+        int n = nums.length;
+        int[] res = new int[n];
+        int[] L = new int[n];
+        int[] R = new int[n];
+
+        L[0] = 1;
+        for (int i = 1; i < n; i++) {
+            L[i] = L[i - 1] * nums[i - 1];
+        }
+
+        R[n - 1] = 1;
+        for (int i = n - 2; i >= 0; i--) {
+            R[i] = R[i + 1] * nums[i + 1];
+        }
+
+        for (int i = 0; i < n; i++) {
+            res[i] = L[i] * R[i];
+        }
+
+        return res;
+    }
+
     public static void main(String[] args) {
         Q238productExceptSelf q238productExceptSelf = new Q238productExceptSelf();
         int[] input = {4, 3, 9, 6};

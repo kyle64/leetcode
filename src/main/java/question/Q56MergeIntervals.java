@@ -1,6 +1,7 @@
 package question;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.PriorityQueue;
 
@@ -65,6 +66,52 @@ public class Q56MergeIntervals {
         }
 
         return result;
+    }
+
+    public int[][] mergePQ(int[][] intervals) {
+        List<int[]> resList = new ArrayList<>();
+        PriorityQueue<int[]> pq = new PriorityQueue<>(
+                // 左边界越小越优先，相同左边界时数组越长越优先
+                (o1, o2) -> o1[0] == o2[0] ? o2[1] - o1[1] : o1[0] - o2[0]
+        );
+
+        // init
+        for (int[] interval : intervals) {
+            pq.offer(interval);
+        }
+        resList.add(pq.poll());
+
+        while (!pq.isEmpty()) {
+            int[] unMerged = pq.poll();
+            int[] lastMerged = resList.get(resList.size() - 1);
+            if (unMerged[0] > lastMerged[1]) {
+                resList.add(unMerged);
+            } else if (unMerged[1] > lastMerged[1]) {
+                lastMerged[1] = unMerged[1];
+            }
+        }
+
+        return resList.toArray(new int[][]{});
+    }
+
+    public int[][] mergeArray(int[][] intervals) {
+        List<int[]> resList = new ArrayList<>();
+        Arrays.sort(intervals,
+                // 左边界越小越优先，相同左边界时数组越长越优先
+                (o1, o2) -> o1[0] == o2[0] ? o2[1] - o1[1] : o1[0] - o2[0]);
+
+        resList.add(intervals[0]);
+        for (int i = 1; i < intervals.length; i++) {
+            int[] current = intervals[i];
+            int[] lastRes = resList.get(resList.size() - 1);
+            if (lastRes[1] < current[0]) {
+                resList.add(current);
+            } else {
+                lastRes[1] = Math.max(lastRes[1], current[1]);
+            }
+        }
+
+        return resList.toArray(new int[resList.size()][]);
     }
 
     public static void main(String[] args) {

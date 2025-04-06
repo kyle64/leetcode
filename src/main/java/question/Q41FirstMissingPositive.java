@@ -1,5 +1,6 @@
 package question;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -109,5 +110,88 @@ public class Q41FirstMissingPositive {
         }
 
         return res;
+    }
+
+    public int firstMissingPositiveHashSet(int[] nums) {
+        // 哈希表，时间复杂度O(N)，但是空间复杂度也为O(N)
+        Set<Integer> numSet = new HashSet<>();
+        for (int num : nums) {
+            numSet.add(num);
+        }
+
+        for (int i = 1; i <= nums.length; i++) {
+            if (!numSet.contains(i)) {
+                return i;
+            }
+        }
+        return nums.length + 1;
+    }
+
+    public int firstMissingPositiveSort(int[] nums) {
+        // 排序，空间复杂度也为O(1)，但时间复杂度O(NLogN)
+
+        int res = 1;
+        Arrays.sort(nums);
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 1) continue;
+
+            if (nums[i] == res) {
+                res++;
+            }
+        }
+        return res;
+    }
+
+    public int firstMissingPositiveMarkNegative(int[] nums) {
+        // 核心，答案只可能在[1, N + 1]之间
+        // 因此，将符合条件的nums[i] 映射到i的下标上；即1 -> nums[0], 2 -> nums[1], ...
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] < 1 || nums[i] > nums.length) {
+                nums[i] = nums.length + 1;
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            int num = Math.abs(nums[i]);
+            if (num > nums.length) continue;
+            nums[num - 1] = -Math.abs(nums[num - 1]); // 标记成相对数，即负数（官解一）
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            // 意味着没有对应的数将该下表位置标记成负数
+            if (nums[i] > 0) {
+                return i + 1;
+            }
+        }
+        return nums.length + 1;
+    }
+
+    public int firstMissingPositiveSwap(int[] nums) {
+        // 核心，答案只可能在[1, N + 1]之间
+        // 因此，将符合条件的nums[i] 映射到i的下标上；即1 -> nums[0], 2 -> nums[1], ...
+
+        for (int i = 0; i < nums.length; i++) {
+            // nums[i] > 0 && nums[i] <= N意味着nums[i]的值在[1, N]之间，才交换
+            // nums[nums[i] - 1] != nums[i]避免nums交换前后的value是一样的而陷入死循环
+            // while而不是if因为要避免目标位置nums[nums[i] - 1]的值也是[1, N]之间的值
+            while (nums[i] > 0 && nums[i] <= nums.length && nums[nums[i] - 1] != nums[i]) {
+                swap(nums, i, nums[i] - 1);
+            }
+        }
+
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+
+        return nums.length + 1;
+    }
+
+    private void swap(int nums[], int i, int j) {
+        int tmp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = tmp;
     }
 }

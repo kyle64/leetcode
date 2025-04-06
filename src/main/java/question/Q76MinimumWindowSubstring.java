@@ -251,8 +251,48 @@ public class Q76MinimumWindowSubstring {
         return true;
     }
 
+
+
+    Map<Character, Integer> tMap = new HashMap<>();
+    Map<Character, Integer> sMap = new HashMap<>();
+    public String minWindow1(String s, String t) {
+        String res = "";
+        int left = 0, right = 0;
+
+        // init tMap
+        for (char c : t.toCharArray()) {
+            tMap.put(c, tMap.getOrDefault(c, 0) + 1);
+        }
+
+        while (right < s.length()) {
+            sMap.put(s.charAt(right), sMap.getOrDefault(s.charAt(right), 0) + 1);
+            while (left <= right && check(s.substring(left, right + 1))) {
+                if (res.length() == 0 || right - left + 1 < res.length()) {
+                    res = s.substring(left, right + 1);
+                }
+
+                sMap.put(s.charAt(left), sMap.getOrDefault(s.charAt(left), 0) - 1);
+                left++;
+            }
+
+            // 当前位置right，不满足s(left, right)包含t字符串中的所有字符
+            right++;
+        }
+
+        return res;
+    }
+
+    private boolean check(String ss) {
+        for (Map.Entry<Character, Integer> entry : tMap.entrySet()) {
+            if (sMap.getOrDefault(entry.getKey(), 0) < entry.getValue()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static void main(String[] args) {
         String S = "ADOBECODEBANC", T = "ABC";
-        System.out.println(minWindowDistanceAdd(S, T));
+        System.out.println(new Q76MinimumWindowSubstring().minWindow1(S, T));
     }
 }
