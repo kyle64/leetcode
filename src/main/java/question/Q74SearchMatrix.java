@@ -58,6 +58,64 @@ public class Q74SearchMatrix {
         return false;
     }
 
+    public boolean searchMatrix2BinarySearch(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length;
+        // 找行
+        int left = 0, right = m - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // 特殊情况直接返回
+            if (matrix[mid][0] == target) {
+                return true;
+            } else if (matrix[mid][0] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        if (right < 0) {
+            return false;
+        }
+
+        int row = right;
+
+        // 找列
+        left = 0;
+        right = n - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            // 特殊情况直接返回
+            if (matrix[row][mid] == target) {
+                return true;
+            } else if (matrix[row][mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean searchMatrixBinarySearchOnce(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length;
+        // 完全升序，考虑一次遍历
+        int left = 0, right = m * n;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            int row = mid / n, col = mid % n;
+            if (matrix[row][col] == target) {
+                return true;
+            } else if (matrix[row][col] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return false;
+    }
+
     public boolean searchMatrixAbstractBST(int[][] matrix, int target) {
         int m = matrix.length, n = matrix[0].length;
         int i = m - 1, j = 0;
@@ -68,6 +126,23 @@ public class Q74SearchMatrix {
                 j++;
             } else {
                 return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean searchMatrixBST2(int[][] matrix, int target) {
+        int m = matrix.length, n = matrix[0].length;
+        // 旋转45度，从右上角开始遍历
+        int i = 0, j = n - 1;
+        while (i < m && j >= 0) {
+            if (matrix[i][j] == target) {
+                return true;
+            } else if (matrix[i][j] < target) {
+                i++;
+            } else {
+                j--;
             }
         }
 

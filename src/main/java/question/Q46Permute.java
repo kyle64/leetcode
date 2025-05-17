@@ -2,13 +2,14 @@ package question;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Queue;
 
 /**
  * Created by ziheng on 2020/7/13.
  */
-public class Q46 {
+public class Q46Permute {
     /**
      * @Description: 46. 全排列
      *
@@ -88,10 +89,55 @@ public class Q46 {
         }
     }
 
+
+    List<List<Integer>> res;
+    public List<List<Integer>> permutedfs(int[] nums) {
+        res = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            dfs(nums, i, new ArrayList<>());
+        }
+        return res;
+    }
+
+    public void dfs(int[] nums, int current, List<Integer> path) {
+        path.add(nums[current]);
+        if (path.size() == nums.length) {
+            res.add(new ArrayList<>(path));
+        } else {
+            for (int i = 0; i < nums.length; i++) {
+                if (!path.contains(nums[i])) {
+                    dfs(nums, i, path);
+                }
+            }
+        }
+        path.remove(Integer.valueOf(nums[current]));
+    }
+
+    public List<List<Integer>> permuteDfsOpt(int[] nums) {
+        res = new ArrayList<>();
+        dfs(nums, new ArrayDeque<>());
+        return res;
+    }
+
+    private void dfs(int[] nums, Deque<Integer> path) {
+        if (path.size() == nums.length) {
+            res.add(new ArrayList<>(path));
+            return;
+        }
+
+        for (int num : nums) {
+            if (!path.contains(num)) {
+                path.addLast(num);
+                dfs(nums, path);
+                path.pollLast();
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        int[] input = {1, 2 ,3, 4};
-        Q46 q46 = new Q46();
-        List<List<Integer>> list = q46.permute(input);
+        int[] input = {1, 2 ,3};
+        Q46Permute q46Permute = new Q46Permute();
+        List<List<Integer>> list = q46Permute.permuteDfsOpt(input);
         for (List<Integer> integers : list) {
             for (Integer integer : integers) {
                 System.out.print(integer + " ");

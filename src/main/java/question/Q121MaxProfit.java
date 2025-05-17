@@ -3,7 +3,7 @@ package question;
 /**
  * Created by ziheng on 2020/7/10.
  */
-public class Q121 {
+public class Q121MaxProfit {
     /**
      * @Description: 121. 买卖股票的最佳时机
      *
@@ -35,7 +35,7 @@ public class Q121 {
      * @param
      * @return int
      */
-    public static int maxProfit(int[] prices) {
+    public static int maxProfitSlidingWindow(int[] prices) {
         int left = 0, right = 0;
         int profit = 0;
 
@@ -54,8 +54,24 @@ public class Q121 {
         return profit;
     }
 
+    public int maxProfit(int[] prices) {
+        // GreedyAlgorithm贪心
+        // 遍历时寻找最低的买入价，和最高的差价
+        int res = 0;
+        int n = prices.length;
+        // 当前的最低买入价
+        int curMin = Integer.MAX_VALUE >> 1;
+
+        // 记录在每天能买入的最低价
+        for (int i = 0; i < n; i++) {
+            res = Math.max(res, prices[i] - curMin);
+            curMin = Math.min(curMin, prices[i]);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         int[] input = new int[]{2,1,4};
-        System.out.println(maxProfit(input));
+        System.out.println(new Q121MaxProfit().maxProfit(input));
     }
 }

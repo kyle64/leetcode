@@ -54,6 +54,7 @@ public class Q169 {
     }
 
     public int majorityElement1(int[] nums) {
+        // O(nlogn)
         Arrays.sort(nums);
         return nums[nums.length / 2];
     }

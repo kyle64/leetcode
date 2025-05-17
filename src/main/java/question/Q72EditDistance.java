@@ -153,6 +153,35 @@ public class Q72EditDistance {
         return Math.min(insertSteps, Math.min(removeSteps, replaceSteps)) + 1;
     }
 
+    public int minDistanceDP1(String word1, String word2) {
+        // dp[i][j]: 表示把s[0:i]转换成t[0:j]需要的最少操作数
+        // dp[i][j] = dp[i-1][j-1] if s[i] = t[j] else dp[i][j] = min(dp[i][j-1], dp[i-1][j], dp[i-1][j-1]) + 1
+        // s[t]=t[j]则看上一个字符，不同时看是删除s[i]的一个字符/删除t[j]/修改字符哪种操作数少
+        // 删除s[i]和在s中添加一个t[j]字符是等价的
+        char[] s = word1.toCharArray(), t = word2.toCharArray();
+        int m = s.length, n = t.length;
+        int[][] dp = new int[m+1][n+1];
+        // init
+        // 其中一个为空字符串时，编辑距离为另一子串长度
+        for (int i = 0; i <= m; i++) {
+            dp[i][0] = i;
+        }
+        for (int j = 0; j <= n; j++) {
+            dp[0][j] = j;
+        }
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (s[i-1] == t[j-1]) {
+                    dp[i][j] = dp[i-1][j-1];
+                } else {
+                    dp[i][j] = Math.min(dp[i-1][j-1], Math.min(dp[i][j-1], dp[i-1][j])) + 1;
+                }
+            }
+        }
+        return dp[m][n];
+    }
+
     public static void main(String[] args) {
         String word1 = "dinitrophenylhydrazine";
         String word2 = "acetylphenylhydrazine";

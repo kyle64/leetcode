@@ -74,4 +74,42 @@ public class Q62uniquePaths {
 
         return dp[n - 1][m - 1];
     }
+
+    public int uniquePathsDP(int m, int n) {
+        // dp[i][j]: 走到board[i][j]的方案数
+        // dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        int[][] dp = new int[m][n];
+        // init
+        for (int i = 0; i < m; i++) {
+            dp[i][0] = 1;
+        }
+        for (int j = 0; j < n; j++) {
+            dp[0][j] = 1;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    public int uniquePathsDPOpt(int m, int n) {
+        // dp[i][j]: 走到board[i][j]的方案数
+        // dp[i][j] = dp[i-1][j] + dp[i][j-1]
+        // 空间优化
+        int[] dp = new int[n];
+        // init
+        for (int j = 0; j < n; j++) {
+            dp[j] = 1;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[j] = dp[j] + dp[j - 1];
+            }
+        }
+        return dp[n-1];
+    }
 }

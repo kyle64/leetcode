@@ -1,5 +1,7 @@
 package question;
 
+import java.util.Arrays;
+
 /**
  * Created by ziheng on 2020/7/29.
  */
@@ -45,5 +47,37 @@ public class Q55JumpGame {
         }
 
         return true;
+    }
+
+    public boolean canJumpOpt(int[] nums) {
+        int n = nums.length;
+        int rightmost = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (i <= rightmost) {
+                rightmost = Math.max(rightmost, i + nums[i]);
+                if (rightmost >= n - 1) {
+                    return true;
+                }
+            } else {
+                break;
+            }
+        }
+        return false;
+    }
+
+    public boolean canJump1(int[] nums) {
+        int n = nums.length;
+        int curMaxIdx = 0;
+        int i = 0;
+        do {
+            if (i + nums[i] >= n - 1) {
+                return true;
+            }
+            // 更新最远能达到的范围
+            curMaxIdx = Math.max(curMaxIdx, i + nums[i]);
+            i++;
+        } while (i <= curMaxIdx);
+        return false;
     }
 }

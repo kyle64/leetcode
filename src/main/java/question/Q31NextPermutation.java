@@ -60,6 +60,46 @@ public class Q31NextPermutation {
         Arrays.sort(nums, next + 1, nums.length);
     }
 
+    public void nextPermutation1(int[] nums) {
+        // 从后往前寻找第一个连续升序的相邻元素
+        // 因为有升序的元素，就意味着可以通过交换得到下一个字段序
+        int n = nums.length;
+        int left = -1, right = -1;
+        for (int i = n - 1; i > 0; i--) {
+            // 出现相邻升序元素[a0, a1], a0是需要被替换的
+            if (nums[i] > nums[i - 1]) {
+                left = i - 1;
+                break;
+            }
+        }
+
+        // 完全非递增数列，直接排序
+        if (left < 0) {
+            Arrays.sort(nums);
+            return;
+        }
+
+        // 从后往前寻找第一个大于nums[left]数，此为下一个字典序要修改的元素
+        for (int i = n - 1; i > left; i--) {
+            // 相等也跳过
+            if (nums[i] > nums[left]) {
+                right = i;
+                break;
+            }
+        }
+        swap(nums, left, right);
+        // 排序（此时等价于反转）从nums[i:n-1]的剩余数组
+        reverse(nums, left + 1, n - 1);
+    }
+
+    private void reverse(int[] nums, int l, int r) {
+        while(l < r) {
+            swap(nums, l, r);
+            l++;
+            r--;
+        }
+    }
+
     private static void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];

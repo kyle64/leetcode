@@ -86,6 +86,55 @@ public class Q39CombinationSum {
         }
     }
 
+    final List<List<Integer>> res = new ArrayList<>();
+    public List<List<Integer>> combinationSumDfs(int[] candidates, int target) {
+        dfs(candidates, 0, target, new ArrayDeque<>());
+        return res;
+    }
+
+    private void dfs(int[] candidates, int index, int target, Deque<Integer> path) {
+        if (target == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        } else if (target < 0) {
+            // 都是正整数，不考虑负数情况，剪枝
+            return;
+        }
+
+        // 只考虑当前index之后的元素, 避免重复
+        for (int i = index; i < candidates.length; i++) {
+            int candidate = candidates[i];
+            path.addLast(candidate);
+            // 可重复取，不传i + 1
+            dfs(candidates, i, target - candidate, path);
+            path.removeLast();
+        }
+    }
+
+    private void dfsSelection(int[] candidates, int index, int target, Deque<Integer> path) {
+        if (target == 0) {
+            res.add(new ArrayList<>(path));
+            return;
+        } else if (target < 0 || index == candidates.length) {
+            // 都是正整数，不考虑负数情况
+            // 已完遍历数组
+            return;
+        }
+
+        // 考虑使用当前index的元素和不使用两种情况
+
+        // 选择使用当前的candidate
+        int candidate = candidates[index];
+        if (target - candidate >= 0) {
+            path.addLast(candidate);
+            // 可重复取，不传i + 1
+            dfsSelection(candidates, index, target - candidate, path);
+            path.removeLast();
+        }
+        // 不选择使用当前的candidate，直接考虑下一个元素
+        dfsSelection(candidates, index + 1, target, path);
+    }
+
     public static void main(String[] args) {
         int[] candidates = {2,3,6,7};
         int target = 7;

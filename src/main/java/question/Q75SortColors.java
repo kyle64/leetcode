@@ -1,5 +1,6 @@
 package question;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -122,6 +123,80 @@ public class Q75SortColors {
                 }
             }
         }
+    }
+
+    public void sortColorsCountSort(int[] nums) {
+        // 在已知数组元素种类的条件下，可以根据各元素的数量排序
+        int[] counts = new int[3];
+        for (int num : nums) {
+            counts[num]++;
+        }
+        Arrays.fill(nums, 0, counts[0], 0);
+        Arrays.fill(nums, counts[0], counts[0] + counts[1], 1);
+        Arrays.fill(nums, counts[0] + counts[1], nums.length, 2);
+    }
+
+    public void sortColors1Ptr(int[] nums) {
+        int n = nums.length;
+        // 单指针，两次遍历
+        // 第一次，交换0到数组头部
+        int p0 = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 0) {
+                swap(nums, p0, i);
+                p0++;
+            }
+        }
+        // 第二次，交换1到p0后面
+        int p1 = p0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 1) {
+                swap(nums, p1, i);
+                p1++;
+            }
+        }
+    }
+
+    public void sortColors2Ptrs01(int[] nums) {
+        int n = nums.length;
+        // 一次遍历，同时交换0，1
+        // p0表示最后一个0的下标位置
+        int p0 = 0, p1 = 0;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == 1) {
+                swap(nums, p1, i);
+                p1++;
+            } else if (nums[i] == 0) {
+                swap(nums, p0, i);
+                // p0 < p1说明：p0交换的位置上已经有p1发生过交换，即nums[p0]=1，
+                // 因此需要再交换p1和当前i，将1放到p1位置上
+                if (p0 < p1) {
+                    swap(nums, p1, i);
+                }
+                p0++;
+                p1++;
+            }
+        }
+
+    }
+
+    public void sortColors2Ptrs02(int[] nums) {
+        int n = nums.length;
+        // 一次遍历，同时交换0，2
+        // p0表示最后一个0的下标位置
+        // p2表示第一个2的下标位置
+        int p0 = 0, p2 = n - 1;
+        for (int i = 0; i < n; i++) {
+            // 交换过来的仍有可能是2或0（1不用处理），因此先处理2，将if改成while，增加边界条件
+            while (i < p2 && nums[i] == 2) {
+                swap(nums, i, p2--);
+            }
+            // 对于0的处理不变，放到数组开头
+            if (nums[i] == 0) {
+                swap(nums, i, p0++);
+            }
+        }
+
     }
 
     public static void main(String[] args) {

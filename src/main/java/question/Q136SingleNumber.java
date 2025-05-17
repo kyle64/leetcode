@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * Created by ziheng on 2020/7/9.
  */
-public class Q136 {
+public class Q136SingleNumber {
     /**
      * @Description: 136. 只出现一次的数字
      *

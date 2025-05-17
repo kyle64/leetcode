@@ -1,5 +1,7 @@
 package question;
 
+import structure.ListNode;
+
 import java.util.ArrayDeque;
 import java.util.Deque;
 
@@ -7,14 +9,6 @@ import java.util.Deque;
  * Created by ziheng on 2020/7/23.
  */
 public class Q19RemoveNthNodeFromEndofList {
-    public class ListNode {
-        int val;
-        ListNode next;
-
-        ListNode(int x) {
-            val = x;
-        }
-    }
 
     public ListNode removeNthFromEnd(ListNode head, int n) {
         // n is valid
@@ -93,5 +87,47 @@ public class Q19RemoveNthNodeFromEndofList {
         }
 
         return head;
+    }
+
+    public ListNode removeNthFromEndCalcLen(ListNode head, int n) {
+        // 计算链表长度
+        ListNode current = head;
+        int len = 0;
+        while (current != null) {
+            len++;
+            current = current.next;
+        }
+
+        // 找到移除节点的前置节点
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        current = dummy;
+        for (int i = 0; i < len - n; i++) {
+            current = current.next;
+        }
+
+        if (current != null) {
+            current.next = current.next.next;
+        }
+
+        return dummy.next;
+    }
+
+    public ListNode removeNthFromEnd2Ptrs(ListNode head, int n) {
+        // 快慢指针，一次遍历
+        ListNode dummy = new ListNode();
+        dummy.next = head;
+        ListNode fast, slow;
+        fast = slow = dummy;
+
+        while (fast.next != null) {
+            fast = fast.next;
+            if (n-- <= 0) {
+                slow = slow.next;
+            }
+        }
+        slow.next = slow.next.next;
+
+        return dummy.next;
     }
 }

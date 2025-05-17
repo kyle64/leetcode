@@ -135,4 +135,34 @@ public class Q23MergeKSortedLists {
 
         return dummy.next;
     }
+
+    public ListNode mergeKListsPQ2(ListNode[] lists) {
+        ListNode dummy = new ListNode(-1);
+        ListNode current = dummy;
+
+        // 全部都是升序列表，即每次比较头节点即可
+        PriorityQueue<ListNode> pq = new PriorityQueue<>(
+                (o1, o2) -> o1.val - o2.val
+        );
+
+        for (ListNode list : lists) {
+            if (list != null) {
+                pq.offer(list);
+            }
+        }
+
+        while (!pq.isEmpty()) {
+            ListNode node = pq.poll();
+            current.next = node;
+
+            if (node.next != null) {
+                node = node.next;
+                pq.offer(node);
+            }
+
+            current = current.next;
+        }
+
+        return dummy.next;
+    }
 }

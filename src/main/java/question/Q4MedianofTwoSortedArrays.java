@@ -172,6 +172,61 @@ public class Q4MedianofTwoSortedArrays {
         return (m + n) % 2 == 0 ? (median1 + median2) / 2.0 : median1;
     }
 
+    public double findMedianSortedArraysFindKthNum(int[] nums1, int[] nums2) {
+        int m = nums1.length, n = nums2.length;
+        int totalLen = m + n;
+        // 找中位数就是找第(m + n)/2 and (m + n)/2 + 1一两个数（奇偶时需要）
+        // 转化为用二分法找第k个数
+        // 二分法核心思想：每次剔除一半
+        // 尝试剔除k/2个数，i = k/2 - 1时，比较A[i]和B[i]，
+        // 如果A[i] < B[i]，就说明A中有k/2 - 1个小于A[i]的数，B中最多也只有k/2 - 1个小于A[i]的数，也就是总共最多只有k-2个数小于A[i]，因此A[i]及之前的数都可以排除，反之亦然
+        int mid1 = totalLen / 2;
+        int mid2 = totalLen / 2 + 1;
+
+        if (totalLen % 2 == 1) {
+            return (double) findKthNum(nums1, nums2, mid2);
+        } else {
+            return (findKthNum(nums1, nums2, mid1) + findKthNum(nums1, nums2, mid2)) / 2.0;
+        }
+    }
+
+    private int findKthNum(int[] nums1, int[] nums2, int k) {
+        // 三种情况需要特殊处理
+        // 1. 如果 A[k/2−1] 或者 B[k/2−1] 越界，那么我们可以选取对应数组中的最后一个元素。在这种情况下，我们必须根据排除数的个数减少 k 的值，而不能直接将 k 减去 k/2。
+        // 2. 如果一个数组为空，说明该数组中的所有元素都被排除，我们可以直接返回另一个数组中第 k 小的元素。
+        // 3. 如果 k=1，我们只要返回两个数组首元素的最小值即可。
+        int m = nums1.length, n = nums2.length;
+        int l1 = 0, l2 = 0;
+        while (true) {
+            // 数组为空，直接返回另一数组的第k个元素
+            if (l1 == m) {
+                return nums2[l2 + k - 1];
+            }
+            if (l2 == n) {
+                return nums1[l1 + k - 1];
+            }
+
+            // k=1，返回当前两个指针中较小的元素即可
+            if (k == 1) {
+                return Math.min(nums1[l1], nums2[l2]);
+            }
+
+            int mid = k/2;
+            // A[k/2−1] 或者 B[k/2−1] 越界，那么我们可以选取对应数组中的最后一个元素
+            int i = Math.min(l1 + mid, m) - 1;
+            int j = Math.min(l2 + mid, n) - 1;
+
+            if (nums1[i] < nums2[j]) {
+                // 剔除nums1中下标小于等于i的数
+                k -= (i - l1 + 1);
+                l1 = i + 1;
+            } else {
+                k -= (j - l2 + 1);
+                l2 = j + 1;
+            }
+        }
+    }
+
     public static void main(String[] args) {
         int[] input1 = {1,2};
         int[] input2 = {3,4};

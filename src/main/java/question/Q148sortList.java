@@ -1,5 +1,8 @@
 package question;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by ziheng on 2020/7/13.
  */
@@ -80,6 +83,27 @@ public class Q148sortList {
 
         if (right != null) {
             current.next = right;
+        }
+
+        return dummy.next;
+    }
+
+    public ListNode sortListByArray(ListNode head) {
+        // 放入数组排序，时间复杂度O(NlogN)，空间复杂度O(N)
+        ListNode dummy = new ListNode(-1);
+
+        List<ListNode> nodeList = new ArrayList<>();
+        while (head != null) {
+            nodeList.add(head);
+            head = head.next;
+        }
+        nodeList.sort((o1, o2) -> o1.val - o2.val);
+
+        ListNode current = dummy;
+        for (int i = 0; i < nodeList.size(); i++) {
+            current.next = nodeList.get(i);
+            current = current.next;
+            current.next = null;
         }
 
         return dummy.next;

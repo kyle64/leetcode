@@ -110,4 +110,17 @@ public class Q124BinaryTreeMaximumPathSum {
         // 返回节点的最大贡献值
         return node.val + Math.max(leftGain, rightGain);
     }
+
+    public int dfs(TreeNode root) {
+        if (root == null) return 0;
+
+        // 如果小于0则路径不包含子树节点
+        int leftPathSum = Math.max(0, dfs(root.left));
+        int rightPathSum = Math.max(0, dfs(root.right));
+
+        // 比较更新最大路径和，过当前节点的左右子树都可以取
+        maxSum = Math.max(maxSum, root.val + leftPathSum + rightPathSum);
+        // 过当前节点的最大单路径和, 左右子树只能取一边，或者都不取
+        return root.val + Math.max(leftPathSum, rightPathSum);
+    }
 }

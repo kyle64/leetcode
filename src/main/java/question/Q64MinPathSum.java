@@ -57,6 +57,57 @@ public class Q64MinPathSum {
         return dp[grid.length - 1][len - 1];
     }
 
+    public int minPathSumDP(int[][] grid) {
+        // dp[i][j]: 从grid[0][0]到达grid[i][j]的最小路径和
+        // dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+        int m = grid.length, n = grid[0].length;
+        int[][] dp = new int[m][n];
+        // init
+        int sum = 0;
+        for (int i = 0; i < m; i++) {
+            sum += grid[i][0];
+            dp[i][0] = sum;
+        }
+        sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += grid[0][j];
+            dp[0][j] = sum;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 1; j < n; j++) {
+                dp[i][j] = Math.min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+            }
+        }
+        return dp[m - 1][n - 1];
+    }
+
+    public int minPathSumDPOpt(int[][] grid) {
+        // dp[i][j]: 从grid[0][0]到达grid[i][j]的最小路径和
+        // dp[i][j] = min(dp[i - 1][j], dp[i][j - 1]) + grid[i][j]
+        // 空间优化
+        int m = grid.length, n = grid[0].length;
+        int[] dp = new int[n];
+        // init
+        int sum = 0;
+        for (int j = 0; j < n; j++) {
+            sum += grid[0][j];
+            dp[j] = sum;
+        }
+
+        for (int i = 1; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // 单独处理col=0的情况
+                if (j == 0) {
+                    dp[j] += grid[i][j];
+                } else {
+                    dp[j] = Math.min(dp[j], dp[j - 1]) + grid[i][j];
+                }
+            }
+        }
+        return dp[n - 1];
+    }
+
     public static void main(String[] args) {
 //        int[][] input = {{7, 3, 1, 5}, {1, 5, 3, 2}, {4, 2, 9, 8}};
         int[][] input = {{1, 3, 1}, {1, 5, 1}, {4, 2, 1}};

@@ -114,4 +114,33 @@ public class Q17LetterCombinationsofaPhoneNumber {
 
         return dp[digits.length()];
     }
+
+    String[] letters = new String[] {"", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+    List<String> res;
+    private char[] digitArray;
+    private char[] path;
+
+    public List<String> letterCombinationsBackTrack(String digits) {
+        res = new ArrayList<>();
+        if (digits.length() == 0) {
+            return res;
+        }
+
+        digitArray = digits.toCharArray();
+        path = new char[digits.length()];
+        dfs(0);
+        return res;
+    }
+
+    private void dfs(int index) {
+        if (index == digitArray.length) {
+            res.add(new String(path));
+            return;
+        }
+
+        for (char ch : letters[digitArray[index] - '0'].toCharArray()) {
+            path[index] = ch;
+            dfs(index + 1);
+        }
+    }
 }

@@ -2,6 +2,7 @@ package question;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 /**
  * Created by ziheng on 2020/7/13.
@@ -73,5 +74,25 @@ public class Q230kthSmallest {
             nodeList.add(node);
             inOrderTraversal(node.right, nodeList);
         }
+    }
+
+    public int kthSmallestIterator(TreeNode root, int k) {
+        Stack<TreeNode> stk = new Stack<>();
+
+        while (root != null || !stk.isEmpty()) {
+            if (root != null) {
+                stk.push(root);
+                root = root.left;
+            } else {
+                root = stk.pop();
+                k--;
+                if (k == 0) {
+                    break;
+                }
+                root = root.right;
+            }
+        }
+
+        return root.val;
     }
 }

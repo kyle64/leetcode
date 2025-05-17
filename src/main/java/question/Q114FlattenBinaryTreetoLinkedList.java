@@ -1,5 +1,7 @@
 package question;
 
+import java.util.Stack;
+
 /**
  * Created by ziheng on 2020/8/2.
  */
@@ -81,5 +83,54 @@ public class Q114FlattenBinaryTreetoLinkedList {
         // 将当前最右节点的right指向整理好的右子树
         curr.right = flattenHelper(prevRight);
         return root;
+    }
+
+    public void flatten1(TreeNode root) {
+        if (root == null) return;
+
+        TreeNode dummy = new TreeNode();
+        TreeNode current = dummy;
+
+        Stack<TreeNode> stk = new Stack<>();
+        stk.push(root);
+        while (!stk.isEmpty()) {
+            TreeNode node = stk.pop();
+            current.right = new TreeNode(node.val);
+            current = current.right;
+
+            if (node.right != null) {
+                stk.push(node.right);
+            }
+            if (node.left != null) {
+                stk.push(node.left);
+            }
+        }
+
+        root.left = null;
+        root.right = dummy.right.right;
+    }
+
+    public void flattenMorris(TreeNode root) {
+        if (root == null) return;
+
+        TreeNode current = root;
+        while (current != null) {
+            if (current.left != null) {
+                // 先继节点：寻找左子树中的最右节点
+                TreeNode predecessor = current.left;
+                while (predecessor.right != null) {
+                    predecessor = predecessor.right;
+                }
+
+                // 按照前序遍历的修改，将当前节点的右子树接在predecessor的right
+                predecessor.right = current.right;
+                // 将当前的left接到right上
+                current.right = current.left;
+                current.left = null;
+            }
+
+            // 处理下一个节点，直到所有左子树都处理完毕
+            current = current.right;
+        }
     }
 }

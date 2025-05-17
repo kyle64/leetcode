@@ -1,5 +1,7 @@
 package question;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 /**
@@ -95,5 +97,96 @@ public class Q84LargestRectangleinHistogram {
         }
 
         return area;
+    }
+
+    public int largestRectangleArea2(int[] heights) {
+        int res = Integer.MIN_VALUE;
+        int n = heights.length;
+        // 对于i，如果heights[j] > heights[i]，则矩形高度依旧为heights[i]; 但如果heights[j] < heights[i], 就能够确定heights[i]的最大宽度
+        Deque<Integer> stk = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            // 严格小于heights[stk.peek()]才可以
+            while (!stk.isEmpty() && heights[i] < heights[stk.peek()]) {
+                // 此时heights[stk.peek()]的最大宽度的右边界已确定是i
+                // 寻找第一次出现heights[stk.peek()]的下标，因为可能高度相同
+                int idx = stk.pop();
+                while (!stk.isEmpty() && heights[idx] == heights[stk.peek()]) {
+                    idx = stk.pop();
+                }
+                // 组成最大的矩形面积那就是要找左边第一个小于当前高度的下标left，
+                // 再找右边第一个小于当前高度的下标right 那宽度就是这两个下标之间的距离了
+                // 但是要排除这两个下标 所以是right - left - 1
+                int width = stk.isEmpty() ? i : i - stk.peek() - 1;
+                res = Math.max(res, heights[idx] * width);
+            }
+            stk.push(i);
+        }
+        // 处理栈中的剩余元素
+        while (!stk.isEmpty()) {
+            int height = heights[stk.pop()];
+            // 处理heights[idx]相同的元素
+            while (!stk.isEmpty() && height == heights[stk.peek()]) {
+                stk.pop();
+            }
+
+            int width = stk.isEmpty() ? n : n - stk.peek() - 1;
+
+            res = Math.max(res, height * width);
+        }
+        return res;
+    }
+
+    public int largestRectangleArea3(int[] heights) {
+        int res = Integer.MIN_VALUE;
+        int n = heights.length;
+        // 对于i，如果heights[j] > heights[i]，则矩形高度依旧为heights[i]; 但如果heights[j] < heights[i], 就能够确定heights[i]的最大宽度
+        Deque<Integer> stk = new ArrayDeque<>();
+        for (int i = 0; i < n; i++) {
+            // 寻找左侧第一个小于heights[stk.peek()]的下标
+            // 等于时也出栈，因为当前元素压栈后又会再次判断
+            while (!stk.isEmpty() && heights[i] <= heights[stk.peek()]) {
+                // 此时heights[stk.peek()]的最大宽度的右边界已确定是i
+                // 寻找第一次出现heights[stk.peek()]的下标，因为可能高度相同
+                int idx = stk.pop();
+                int width = stk.isEmpty() ? i : i - stk.peek() - 1;
+                res = Math.max(res, heights[idx] * width);
+            }
+            stk.push(i);
+        }
+        // 处理栈中的剩余元素
+        while (!stk.isEmpty()) {
+            int height = heights[stk.pop()];
+            int width = stk.isEmpty() ? n : n - stk.peek() - 1;
+            res = Math.max(res, height * width);
+        }
+        return res;
+    }
+
+    public int largestRectangleAreaSentinel(int[] heights) {
+        // 哨兵优化
+        // 针对两种特殊情况处理：
+        // 1。 弹栈的时候，栈为空；
+        // 2。 遍历完成以后，栈中还有元素
+        // 在两头各加一个哨兵，都比所有元素小
+        int res = 0;
+        int len = heights.length;
+        int newLen = len + 2;
+        int[] newHeights = new int[newLen];
+        // 原heights拷贝到newHeights[1:n]
+        System.arraycopy(heights, 0, newHeights, 1, len);
+        Deque<Integer> stk = new ArrayDeque<>();
+        // 初始化两头的柱子
+        newHeights[0] = newHeights[newLen - 1] = 0;
+        stk.push(0);
+        for (int i = 1; i < newLen; i++) {
+            while (newHeights[i] < newHeights[stk.peek()]) {
+                int idx = stk.pop();
+                int curHeight = newHeights[idx];
+                int curWidth = i - stk.peek() - 1;
+                res = Math.max(res, curHeight * curWidth);
+            }
+            stk.push(i);
+        }
+        return res;
     }
 }

@@ -3,12 +3,13 @@ package question;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by ziheng on 2020/7/10.
  */
-public class Q155 {
+public class Q155MinStack {
     /**
      * @param
      * @Description: 155. 最小栈
@@ -124,6 +125,35 @@ public class Q155 {
 
         public int getMin() {
             return this.min;
+        }
+    }
+
+    class MinStack1Stk {
+        // 使用一个辅助栈来记录每个元素对应的栈内最小值
+        // 每个元素都对应一个栈内最小值
+        Deque<int[]> stk;
+
+        public MinStack1Stk() {
+            stk = new LinkedList<>();
+        }
+
+        public void push(int val) {
+            int[] node = new int[2];
+            node[0] = val;
+            node[1] = stk.isEmpty() ? val : Math.min(stk.peek()[1], val);
+            stk.push(node);
+        }
+
+        public void pop() {
+            stk.pop();
+        }
+
+        public int top() {
+            return stk.peek()[0];
+        }
+
+        public int getMin() {
+            return stk.peek()[1];
         }
     }
 

@@ -69,6 +69,63 @@ public class Q22GenerateParentheses {
         }
     }
 
+    final List<String> res = new ArrayList<>();
+    public List<String> generateParenthesisDFS(int n) {
+        // 往两侧分别添加'('和')'，直到左右括号数量都等于n
+        // 如果遇到右括号多于左括号时，提前剪枝
+        dfs(n, new StringBuilder(), 0, 0);
+        return res;
+    }
+
+    private void dfs(int n, StringBuilder path, int leftCount, int rightCount) {
+        if (path.length() == 2 * n) {
+            // 等效于leftCount == n && rightCount == n
+            res.add(path.toString());
+            return;
+        }
+
+        if (leftCount < n) {
+            path.append('(');
+            dfs(n, path, leftCount + 1, rightCount);
+            path.deleteCharAt(path.length() - 1);
+        }
+
+        // 因为是按顺序的话是先添加左括号，再添加右括号
+        // 所以如果出现右括号数量多于左括号就说明是非法的情况
+        if (leftCount > rightCount) {
+            path.append(')');
+            dfs(n, path, leftCount, rightCount + 1);
+            path.deleteCharAt(path.length() - 1);
+        }
+    }
+
+    public List<String> generateParenthesisDP(int n) {
+        List<List<String>> dp = new ArrayList<>();
+        dp.add(new ArrayList<>() {{
+            add("");
+        }});
+        // dp.add(new ArrayList<>() {{
+        //     add("()");
+        // }});
+
+        for (int i = 1; i <= n; i++) {
+            List<String> tmp = new ArrayList<>();
+            for (int j = 0; j < i; j++) {
+                // 将dp[0:i-1]分为dp[0:j]和dp[j:i-1], 保证first+second=i-1
+                // dp[i] = "(" + first + ")" + second
+                List<String> first = dp.get(j);
+                List<String> second = dp.get(i - 1 - j);
+                for (String s1 : first) {
+                    for (String s2 : second) {
+                        tmp.add("(" + s1 + ")" + s2);
+                    }
+                }
+            }
+            dp.add(tmp);
+        }
+        return dp.get(n);
+    }
+
     public static void main(String[] args) {
         List<String> result = generateParenthesis(3);
         for (String s : result) {

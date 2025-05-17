@@ -134,6 +134,79 @@ public class Q79WordSearch {
         }
     }
 
+    boolean valid = false;
+    public boolean exist2(char[][] board, String word) {
+        visited = new boolean[board.length][board[0].length];
+        char[] wordArray = word.toCharArray();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (board[i][j] == wordArray[0]) {
+                    dfs2(board, wordArray, i, j, 0);
+                }
+            }
+        }
+
+        return valid;
+    }
+
+    private void dfs2(char[][] board, char[] wordArray, int i, int j, int wIndex) {
+        if (wIndex == wordArray.length - 1) {
+            valid = true;
+            return;
+        }
+
+        visited[i][j] = true;
+
+        for (int[] dir : dirs) {
+            int row = i + dir[0], col = j + dir[1];
+            if (row >= 0 && row < board.length && col >= 0 && col < board[0].length && board[row][col] == wordArray[wIndex + 1] && !visited[row][col]) {
+                visited[row][col] = true;
+                dfs2(board, wordArray, row, col, wIndex + 1);
+                visited[row][col] = false;
+            }
+        }
+        visited[i][j] = false;
+    }
+
+    public boolean existDFS(char[][] board, String word) {
+        visited = new boolean[board.length][board[0].length];
+        char[] wordArray = word.toCharArray();
+
+        for (int i = 0; i < board.length; i++) {
+            for (int j = 0; j < board[0].length; j++) {
+                if (dfs(board, wordArray, i, j, 0)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean dfs(char[][] board, char[] wordArray, int i, int j, int wIndex) {
+        if (board[i][j] != wordArray[wIndex]) {
+            return false;
+        }
+
+        if (wIndex == wordArray.length - 1) {
+            return true;
+        }
+
+        visited[i][j] = true;
+
+        for (int[] dir : dirs) {
+            int row = i + dir[0], col = j + dir[1];
+            if (row >= 0 && row < board.length && col >= 0 && col < board[0].length && board[row][col] == wordArray[wIndex + 1] && !visited[row][col]) {
+                if (dfs(board, wordArray, row, col, wIndex + 1)) {
+                    return true;
+                }
+            }
+        }
+        visited[i][j] = false;
+        return false;
+    }
+
     public static void main(String[] args) {
         char[][] board = {{'A','B','C','E'},{'S','F','C','S'},{'A','D','E','E'}};
         String word = "ABCB";

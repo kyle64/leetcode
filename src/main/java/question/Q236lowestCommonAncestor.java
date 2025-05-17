@@ -117,4 +117,30 @@ public class Q236lowestCommonAncestor {
             return root;
         }
     }
+
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) return null;
+        if (root == p || root == q) return root;
+
+        // 左右子树中p、q的最近公共祖先
+        TreeNode left = lowestCommonAncestor2(root.left, p, q);
+        TreeNode right = lowestCommonAncestor2(root.right, p, q);
+
+        // 左右各包含一个，返回当前节点
+        // (left == p && right == q) || (left == q && right == p)
+        if (left != null && right != null) {
+            return root;
+        }
+
+        // 都在右子树中
+        if (left == null) {
+            return right;
+        }
+
+        // 都在左子树中
+        if (right == null) {
+            return left;
+        }
+        return root;
+    }
 }

@@ -96,4 +96,39 @@ public class Q48RotateImage {
             }
         }
     }
+
+    public void rotateSimulation(int[][] matrix) {
+        int n = matrix.length;
+        int top = 0, bot = n - 1, left = 0, right = n - 1;
+
+        // 模拟，每次旋转4条边，[start, length - 1)
+        while (top <= bot && left <= right) {
+            for (int i = 0; i < n - 1; i++) {
+                int tmp = matrix[top][left + i];
+                matrix[top][left + i] = matrix[bot - i][left];
+                matrix[bot - i][left] = matrix[bot][right - i];
+                matrix[bot][right - i] = matrix[top + i][right];
+                matrix[top + i][right] = tmp;
+            }
+            top++;
+            bot--;
+            left++;
+            right--;
+            n -= 2;
+        }
+    }
+
+    public void rotateDivision(int[][] matrix) {
+        int n = matrix.length;
+        // 分割成4个n/2 * n/2或n/2 * (n+1)/2的矩型，然后中心旋转90度
+        for (int i = 0; i < n/2; i++) {
+            for (int j = 0; j < (n + 1) / 2; j++) {
+                int tmp = matrix[i][j];
+                matrix[i][j] = matrix[n - 1 - j][i];
+                matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
+                matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
+                matrix[j][n - 1 - i] = tmp;
+            }
+        }
+    }
 }

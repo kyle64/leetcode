@@ -1,14 +1,14 @@
 package question;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Deque;
 import java.util.List;
-import java.util.ListIterator;
 
 /**
  * Created by ziheng on 2020/7/13.
  */
-public class Q78 {
+public class Q78Subsets {
     /**
      * @Description: 78. 子集
      *
@@ -91,10 +91,68 @@ public class Q78 {
         }
     }
 
+    List<List<Integer>> res;
+    public List<List<Integer>> subsetsDfs(int[] nums) {
+        res = new ArrayList<>();
+        // 只能取指定index之后的元素
+        dfs(nums, 0, new ArrayDeque<>());
+        return res;
+    }
+
+    private void dfs(int[] nums, int index, Deque<Integer> path) {
+        res.add(new ArrayList<>(path));
+        for (int i = index; i < nums.length; i++) {
+            path.addLast(nums[i]);
+            dfs(nums, i + 1, path);
+            path.removeLast();
+        }
+    }
+
+    public List<List<Integer>> subsetsIterator(int[] nums) {
+        res = new ArrayList<>();
+        // 迭代，每遍历到新元素，往res中的已有的子集的复制中添加新元素
+        // init
+        res.add(new ArrayList<>());
+
+        for (int num : nums) {
+            // 记录当前res大小
+            int curLen = res.size();
+            // 不用foreach，因为res有新元素添加
+            for (int i = 0; i < curLen; i++) {
+                // 复制当前子集
+                List<Integer> newSubset = new ArrayList<>(res.get(i));
+                // 添加当前数字
+                newSubset.add(num);
+                res.add(newSubset);
+            }
+        }
+        return res;
+    }
+
+    public List<List<Integer>> subsetsEnum(int[] nums) {
+        // 子集总数一定是 2^n, n为nums.length
+        // 用二进制的1、0来表示选中、未选中的状态，正好对应[0, 2^n - 1]个数
+        int n = nums.length;
+        List<List<Integer>> res = new ArrayList<>(1 << n);
+
+        // 枚举全集 U 的所有子集
+        for (int mask = 0; mask < (1 << n); mask++) {
+            List<Integer> subset = new ArrayList<>();
+            // 遍历每一位的选中状态
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    subset.add(nums[i]);
+                }
+            }
+            res.add(subset);
+        }
+        return res;
+    }
+
     public static void main(String[] args) {
         int[] input = {1, 2 ,3};
-        Q78 q78 = new Q78();
-        List<List<Integer>> list = q78.subsets1(input);
+        Q78Subsets q78Subsets = new Q78Subsets();
+        List<List<Integer>> list = q78Subsets.subsets1(input);
         for (List<Integer> integers : list) {
             for (Integer integer : integers) {
                 System.out.print(integer + " ");

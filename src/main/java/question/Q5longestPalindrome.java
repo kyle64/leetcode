@@ -177,6 +177,45 @@ public class Q5longestPalindrome {
         return true;
     }
 
+    public String longestPalindromeDP1(String s) {
+        // dp[i][j]: 表示s[i:j]是否回文
+        // dp[i][j] = dp[i+1][j-1] if i < j - 1 and s[i] = s[j]
+        char[] sArray = s.toCharArray();
+        int len = sArray.length;
+        boolean[][] dp = new boolean[len][len];
+        int maxLen = 1;
+        int start = 0;
+
+        // init
+        for (int i = 0; i < len; i++) {
+            dp[i][i] = true;
+        }
+
+        for (int j = 1; j < len; j++) {
+            for (int i = j - 1; i >= 0; i--) {
+                // 1 2 3 4 5
+                // 1 2 3 4 5
+
+                if (sArray[i] == sArray[j]) {
+                    // a, aa, aba
+                    if (j - i <= 2) {
+                        dp[i][j] = true;
+                    } else {
+                        dp[i][j] = dp[i+1][j-1];
+                    }
+                } else {
+                    dp[i][j] = false;
+                }
+
+                if (dp[i][j] && j - i + 1 > maxLen) {
+                    maxLen = j - i + 1;
+                    start = i;
+                }
+            }
+        }
+        return s.substring(start, start + maxLen);
+    }
+
     public static void main(String[] args) {
         Q5longestPalindrome q5longestPalindrome = new Q5longestPalindrome();
         String s = "abbad";

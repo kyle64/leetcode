@@ -77,6 +77,53 @@ public class Q34FindFirstandLastPositionofElementinSortedArray {
         return left >= 1 && nums[left - 1] == target ? left - 1 : -1;
     }
 
+    public int[] searchRange1(int[] nums, int target) {
+        int[] res = new int[] {-1, -1};
+        int n = nums.length;
+        int left = 0, right = n;
+
+        // looking for left
+        // 左开右闭
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] < target) {
+                left = mid + 1; // 范围缩小到 [mid+1, right)
+            } else {
+                // 等于target时也继续往左收拢右边界
+                right = mid; // 范围缩小到 [left, mid)
+            }
+        }
+        // 退出循环时，left = right;
+        // 如果存在目标，则nums[left] >= target且nums[left - 1] < target
+        // left最终值可能是[0, n], left = n意味着所有元素都小于target，即：nums[n - 1] < target;
+        // left = 0意味着所有元素都大于等于target，即：nums[0] >= target, 直接判断nums[left]即可
+        // 总结：left就是第一个 >= target 的元素下标
+        if (left == n || nums[left] != target) {
+            return res;
+        }
+
+        res[0] = left;
+
+        left = 0;
+        right = n;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] <= target) {
+                // 等于target时也继续往右收拢左边界
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        // 同理，left = 0时意味着所有元素都 > target
+        // 同上：left就是第一个 > target 的元素下标，因此判断nums[left - 1] == target
+        if (left > 0 && nums[left - 1] == target) {
+            res[1] = left;
+        }
+
+        return res;
+    }
+
     public static void main(String[] args) {
         int[] input = {1};
         int target = 1;

@@ -65,10 +65,43 @@ public class Q33search {
         return target == nums[left] ? left : -1;
     }
 
-    public static void main(String[] args) {
-        int[] input = {3, 1};
-        int target = 1;
+    public int search1(int[] nums, int target) {
+        int n = nums.length;
+        int left = 0, right = n - 1;
 
-        System.out.println(search(input, target));
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] >= nums[left]) {
+                // nums[left, mid]升序，旋转pivot在[mid, right]之间
+                // target在[left, mid]之间
+                if (target == nums[mid]) {
+                    return mid;
+                } else if (target < nums[mid] && target >= nums[left]) {
+                    // 保证target = nums[left]时也可以向左收拢，也可以和mid一起提前判断
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            } else {
+                // nums[mid + 1, right]升序，旋转pivot在[0, mid]之间
+                // target在[mid + 1, right]之间
+                if (target == nums[mid]) {
+                    return mid;
+                } else if (target > nums[mid] && target <= nums[right]) {
+                    left = mid + 1;
+                } else {
+                    right = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] input = {4,5,6,7,0,1,2};
+        int target = 0;
+
+        System.out.println(new Q33search().search1(input, target));
     }
 }

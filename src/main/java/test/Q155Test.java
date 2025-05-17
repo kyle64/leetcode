@@ -1,13 +1,13 @@
 package test;
 
-import question.Q155;
+import question.Q155MinStack;
 
 /**
  * Created by ziheng on 2020/7/10.
  */
 public class Q155Test {
     public static void main(String[] args) {
-        Q155.MinStack2 minStack = new Q155.MinStack2();
+        Q155MinStack.MinStack2 minStack = new Q155MinStack.MinStack2();
         minStack.push(Integer.MAX_VALUE-1);
         minStack.push(Integer.MAX_VALUE-1);
         minStack.push(Integer.MAX_VALUE);
